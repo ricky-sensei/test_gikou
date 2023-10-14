@@ -13,7 +13,9 @@ before_move = ""
 
 app = Flask(__name__)
 
-sfen = shogi.Board().sfen()
+board= shogi.Board()
+
+sfen = board.sfen()
 
 
 
@@ -25,7 +27,7 @@ def board_func():
     # board = [[None for _ in range(9)] for _ in range(9)]  # サンプルの将棋盤
     # legal_moves = move_piece.legal_moves(board)  # 歩の動きを取得
     # print(legal_moves)
-
+    global sfen
     banmen = sfen2HTML(sfen)
     global selected
     global before_move
@@ -39,6 +41,7 @@ def board_func():
 def callfromajax():
     global selected
     global before_move
+    global board
     dict = {}
     if request.method == "POST":
         try:
@@ -53,11 +56,11 @@ def callfromajax():
             # print(選択した駒をどこに動かしますか？)
             selected = False
             print(before_move + masu)
+            board.push_usi(before_move + masu)
+            print(board.sfen())
+            print(sfen2HTML(board.sfen()))
             before_move = ""
-            
-
-
-        dict = {"answer": masu}
+            dict = {"answer": sfen2HTML(board.sfen())}
     return json.dumps(dict)
 
 

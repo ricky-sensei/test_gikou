@@ -59,7 +59,7 @@ def sfen2HTML(sfen):
         tr = f"<tr>{td}</tr>"
         table += tr
         dan += 1
-    table = f"<table class='board'><tbody>{table}</tbody></table>"
+    table = f"<table id='board' class='board'><tbody>{table}</tbody></table>"
     return table
 
 if __name__ == "__main__":
