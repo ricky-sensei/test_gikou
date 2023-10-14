@@ -1,12 +1,11 @@
 import json
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash, session, redirect, url_for
 from sfen2HTML import sfen2HTML
 from gikou import gikou_return
 import shogi
 
 
 class Board:
-    """"""
 
     def __init__(self):
         self.board = shogi.Board()
@@ -26,16 +25,22 @@ before_move = ""
 
 
 app = Flask(__name__)
+app.secret_key = "shogi"
 
 board = ""
 sfen = ""
 
 
-@app.route("/")
+@app.route("/", methods=["GET","POST"])
 def board_func():
     banmen = sfen2HTML(game.sfen)
-    return render_template("board.html", syogiban=banmen[0], mochigoma_w=banmen[1], mochigoma_b=banmen[2])
+    if request.method == "GET":
+        return render_template("board.html", syogiban=banmen[0], mochigoma_w=banmen[1], mochigoma_b=banmen[2])
+    elif request.method == "POST":
+        
+        flash("テキストを入力してください。", "promote")
 
+        return render_template("board.html", syogiban=banmen[0], mochigoma_w=banmen[1], mochigoma_b=banmen[2])
 
 @app.route("/call_from_ajax", methods=["POST"])
 def callfromajax():

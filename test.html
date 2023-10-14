@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flash Message with Button</title>
+    <style>
+        .flash-message {
+            background-color: #ffcc00;
+            color: #333;
+            padding: 10px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="flash-message" id="flashMessage">
+        This is a flash message.
+        <button onclick="hideFlashMessage()">Close</button>
+    </div>
+
+    <script>
+        function showFlashMessage() {
+            document.getElementById("flashMessage").style.display = "block";
+        }
+
+        function hideFlashMessage() {
+            document.getElementById("flashMessage").style.display = "none";
+        }
+
+        // 例: ページ読み込み後に自動的にフラッシュメッセージを表示
+        window.onload = function() {
+            showFlashMessage();
+        };
+    </script>
+</body>
+</html>

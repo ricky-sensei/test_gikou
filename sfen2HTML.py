@@ -1,6 +1,5 @@
 import re
 
-
 def insert_asterisks(input_string):
     # 正規表現を使用して数字を検出
     digits = re.findall(r"\d", input_string)
@@ -32,8 +31,27 @@ def sfen2piece(piece):
         piece_char = "角"
     elif piece in ["p", "P"]:
         piece_char = "歩"
+    
     else:
         piece_char = ""
+    
+    return piece_char
+
+
+def sfen2piece_promotion(piece):
+    piece_char = ""
+    if piece in ["l", "L"]:
+        piece_char = "杏"
+    elif piece in ["n", "N"]:
+        piece_char = "圭"
+    elif piece in ["s", "S"]:
+        piece_char = "全"
+    elif piece in ["r", "R"]:
+        piece_char = "龍"
+    elif piece in ["b", "B"]:
+        piece_char = "馬"
+    elif piece in ["p", "P"]:
+        piece_char = "と"
     return piece_char
 
 
@@ -58,19 +76,17 @@ def sfen2HTML(sfen):
             mochigoma_w_list.append(i)
         else:
             mochigoma_b_list.append(i)
-    print(mochigoma)
-    print(mochigoma_w_list)
-    print(mochigoma_b_list)
-    promotable_piece_w = ["p", "l", "n", "s", "r", "b"]
-    promotable_piece_b = ["P", "L", "N", "S", "R", "B"]
-    for i in range(len(promotable_piece_w)):
-        mochigoma_tr_w_piece += f"<td>{sfen2piece(promotable_piece_w[i])}</td>"
-        mochigoma_tr_b_piece += f"<td>{sfen2piece(promotable_piece_b[i])}</td>"
+
+    mochigoma_piece_list_w = ["p", "l", "n", "s", "G", "r", "b", ]
+    mochigoma_piece_list_b = ["P", "L", "N", "S", "G", "R", "B"]
+    for i in range(len(mochigoma_piece_list_w)):
+        mochigoma_tr_w_piece += f"<td id='{mochigoma_piece_list_b[i]}*' onclick='SendIdAsPosition(this.id)'>{sfen2piece(mochigoma_piece_list_w[i])}</td>"
+        mochigoma_tr_b_piece += f"<td id='{mochigoma_piece_list_b[i]}*' onclick='SendIdAsPosition(this.id)'>{sfen2piece(mochigoma_piece_list_b[i])}</td>"
     mochigoma_tr_w_piece = "<tr>" + mochigoma_tr_w_piece + "</tr>"
     mochigoma_tr_b_piece = "<tr>" + mochigoma_tr_b_piece + "</tr>"
-    for i in range(len(promotable_piece_w)):
-        mochigoma_tr_w_count += f"<td>{mochigoma_w_list.count(promotable_piece_w[i])}</td>"
-        mochigoma_tr_b_count += f"<td>{mochigoma_b_list.count(promotable_piece_b[i])}</td>"
+    for i in range(len(mochigoma_piece_list_w)):
+        mochigoma_tr_w_count += f"<td>{mochigoma_w_list.count(mochigoma_piece_list_w[i])}</td>"
+        mochigoma_tr_b_count += f"<td>{mochigoma_b_list.count(mochigoma_piece_list_b[i])}</td>"
     mochigoma_tr_w_count = "<tr>" + mochigoma_tr_w_count + "</tr>"
     mochigoma_tr_b_count = "<tr>" + mochigoma_tr_b_count + "</tr>"
     mochigoma_tr_w = f"<table id='mochigoma_w' class='board'>{mochigoma_tr_w_piece}{mochigoma_tr_w_count}</table>"
@@ -79,10 +95,18 @@ def sfen2HTML(sfen):
     suji = 9
     dan_list = ["a", "b", "c", "d", "e", "f", "g", "h", "i"]
     dan = 0
+    promotion = False
     for row in banmen.split("/"):
         td = ""
         for piece in row:
-            piece_char = sfen2piece(piece)
+            if piece == "+":
+                promotion = True
+                continue
+            elif promotion:
+                piece_char = sfen2piece_promotion(piece)
+                promotion = False
+            else:
+                piece_char = sfen2piece(piece)
 
             if piece.islower():
                 turn = "white"
@@ -100,4 +124,4 @@ def sfen2HTML(sfen):
 
 
 if __name__ == "__main__":
-    print(sfen2HTML("lnsg1g1nl/1r3k1s1/pp1ppp1pp/2p3p2/9/9/PP1PPPPPP/7R1/LNSGKGSNL b Bbp 9")[2])
+    print(sfen2HTML("ln+sg1g1nl/1r3k1s1/pp1ppp1pp/2p3p2/9/9/PP1PPPPPP/7R1/LNSGKGSNL b Bbp 9")[0])
