@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="{{url_for('static', filename='style.css')}} ">
 </head>
 <body>
-    {{banmen | safe}}
+    {{mochigoma_w| safe}}
+    {{syogiban | safe}}
+    {{mochigoma_b| safe}}
     <div id="clicked" style="border: 1px solid black; width: 500px; height: 100px;"></div>
 ​
     <script>
@@ -19,26 +21,30 @@
             data: {"masu": clicked_masu},              // 連想配列をPOSTする
         }).done(function(received_data) {           // 戻ってきたのはJSON（文字列）
             var dict = JSON.parse(received_data);
-            var answer = dict["answer"];
+            var banmen = dict["banmen"];
+            var mochigoma_w = dict["mochigoma_w"];
+            var mochigoma_b = dict["mochigoma_b"];
 
-            if (dict["answer"] !== "" ) {
-                $("#board").html(answer);
+            if (dict["banmen"] !== "" ) {
+                $("#banmen").html(banmen);
+                $("#mochigoma_w").html(mochigoma_w);
+                $("#mochigoma_b").html(mochigoma_b);
 
                 $.ajax("/gikou", {
                     type:"post"
                 }).done(function(recieved_html){
-                    var dict2 = JSON.parse(recieved_html);
-                    var gikoureturn = dict2["gikoureturn"];
+                    var dict_gikou = JSON.parse(recieved_html);
+                    var banmen = dict_gikou["banmen"];
+                    var mochigoma_w = dict_gikou["mochigoma_w"];
+                    var mochigoma_b = dict_gikou["mochigoma_b"];
                     console.log("gikoureturn")
-                    $("#board").html(gikoureturn);
+                    $("#banmen").html(banmen);
+                    $("#mochigoma_w").html(mochigoma_w);
+                    $("#mochigoma_b").html(mochigoma_b);
                 }).fail(function() {
-                console.log("失敗");
-        });
+                    console.log("失敗");
+                });
             }
-
-            
-
-            
             
         }).fail(function() {
             console.log("失敗");
