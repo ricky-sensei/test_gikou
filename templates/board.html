@@ -18,12 +18,33 @@
             type: "post",
             data: {"masu": clicked_masu},              // 連想配列をPOSTする
         }).done(function(received_data) {           // 戻ってきたのはJSON（文字列）
-            var dict = JSON.parse(received_data);   // JSONを連想配列にする
+            var dict = JSON.parse(received_data);
             var answer = dict["answer"];
-            $("#board").html(answer);              // html要素を書き換える
+
+            if (dict["answer"] !== "" ) {
+                $("#board").html(answer);
+
+                $.ajax("/gikou", {
+                    type:"post"
+                }).done(function(recieved_html){
+                    var dict2 = JSON.parse(recieved_html);
+                    var gikoureturn = dict2["gikoureturn"];
+                    console.log("gikoureturn")
+                    $("#board").html(gikoureturn);
+                }).fail(function() {
+                console.log("失敗");
+        });
+            }
+
+            
+
+            
+            
         }).fail(function() {
             console.log("失敗");
         });
+
+
     }
     </script>
 </body>

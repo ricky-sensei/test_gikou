@@ -8,6 +8,7 @@ board = shogi.Board()
 sfen = board.sfen()
 print("スタート")
 def gikou(sfen):
+    print(sfen)
     r = requests.get(
         url=f'https://17xn1ovxga.execute-api.ap-northeast-1.amazonaws.com/production/gikou?byoyomi=10000&position=sfen {sfen}')
     data = r.json()
